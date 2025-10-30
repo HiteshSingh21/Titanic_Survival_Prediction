@@ -1,37 +1,50 @@
 
-## 📓 Project Notebook: `Final.ipynb`
+## 🚢 Titanic Survival Prediction
 
-This repository's core logic is contained in the Jupyter Notebook `Final.ipynb`. This notebook details the complete process of building and evaluating a deep learning model for sentiment analysis.
-
-The project uses a **fine-tuned BERT model** (from the Hugging Face `transformers` library) to classify the sentiment of tweets (likely from the Sentiment140 dataset) as either positive or negative.
+This project analyzes the classic Titanic dataset (`Titanic-Dataset.csv`) to predict passenger survival. The entire workflow, from data cleaning and feature engineering to model training and evaluation, is contained in the `Analysis.ipynb` Jupyter Notebook.
 
 ### Notebook Workflow
 
 The notebook is structured to cover the following key steps:
 
-1.  **Data Loading:** The Twitter sentiment dataset is loaded into a pandas DataFrame.
-2.  **Data Pre-processing:** (Implicit) Text data is cleaned and tokenized to be suitable for the BERT model.
-3.  **Model Fine-Tuning:** A pre-trained BERT model is loaded and fine-tuned on the specific task of sentiment classification.
-4.  **Model Evaluation:** The performance of the fine-tuned model is assessed using standard classification metrics. The notebook generates:
-      * A **Classification Report**, showing precision, recall, and F1-score for both positive and negative classes.
-      * A **Confusion Matrix**, visualized with `seaborn` and `matplotlib`, to show the model's performance in distinguishing between the two classes.
+1.  **Data Loading:** The `Titanic-Dataset.csv` file is loaded into a pandas DataFrame.
+2.  **Data Cleaning & Feature Engineering:**
+      * Handles missing data by imputing the mean for `Age` and dropping rows with missing `Embarked` data.
+      * Engineers new features to improve model performance:
+          * `Has_Cabin`: A binary feature indicating if a passenger had a cabin number listed.
+          * `Deck`: Extracted from the `Cabin` feature (e.g., 'C', 'U' for Unknown).
+          * `FamilySize`: A combination of `SibSp` (siblings/spouses) and `Parch` (parents/children).
+          * `Title`: Extracted from the passenger's `Name` (e.g., Mr., Mrs., Miss., Master).
+      * Drops irrelevant columns like `Ticket` and the original `Cabin`.
+3.  **Exploratory Data Analysis (EDA):**
+      * Uses `seaborn` and `matplotlib` to create visualizations (count plots, histograms) to understand the relationship between survival and features like `Pclass`, `Sex`, `Age`, `Deck`, and `Title`.
+4.  **Pre-processing for Modeling:**
+      * Performs one-hot encoding on all categorical features (`Sex`, `Embarked`, `Title`, `Deck`).
+      * Splits the data into training and test sets.
+      * Scales all features using `StandardScaler` to prepare them for the models.
+5.  **Modeling & Evaluation:**
+      * Trains and evaluates the accuracy of several different classification models:
+          * Logistic Regression
+          * Random Forest Classifier
+          * Gradient Boosting Classifier
+      * Builds an ensemble `VotingClassifier` (combining Logistic Regression, XGBClassifier, and Random Forest) to leverage the strengths of multiple models.
+      * Uses `GridSearchCV` to find the best hyperparameters for the ensemble model.
+      * The final model accuracy is printed after training and prediction.
 
 ### 🛠️ How to Run
 
-To run this notebook and reproduce the results, you must first install all the required Python libraries.
+To run this notebook and reproduce the analysis:
 
 1.  Ensure you have Python 3.x installed.
 
-2.  Install all dependencies using the `requirements.txt` file:
+2.  Install the core dependencies. A `requirements.txt` was not provided, but you can install the main libraries using pip:
 
     ```bash
-    pip install -r requirements.txt
+    pip install pandas numpy seaborn matplotlib scikit-learn xgboost
     ```
 
 3.  Once the dependencies are installed, you can launch the notebook:
 
     ```bash
-    jupyter notebook Final.ipynb
+    jupyter notebook Analysis.ipynb
     ```
-
------
